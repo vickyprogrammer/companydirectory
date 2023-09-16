@@ -1,15 +1,10 @@
 <?php
-
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
-
 $executionStartTime = microtime(true);
 
 include("config.php");
 
 header('Content-Type: application/json; charset=UTF-8');
 
-// Check if the form data is set
 if (
     isset($_POST['firstNameInput'], $_POST['lastNameInput'], $_POST['jobTitleInput'], $_POST['emailInput'], $_POST['departmentInput'])
 ) {
@@ -79,7 +74,6 @@ if (
 
     echo json_encode($output);
 } else {
-    // Handle case where form data is missing
     $output['status']['code'] = "400";
     $output['status']['name'] = "error";
     $output['status']['description'] = "Form data missing";

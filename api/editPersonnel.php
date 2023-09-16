@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
-
 $executionStartTime = microtime(true);
 
 include("config.php");
@@ -25,8 +22,6 @@ if (mysqli_connect_errno()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate and sanitize the updated data (similar to the add functionality)
-
     $personnelID = $_POST['personnelIDInput'];
     $firstName = $_POST['firstNameInput'];
     $lastName = $_POST['lastNameInput'];
@@ -34,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_var($_POST['emailInput'], FILTER_SANITIZE_EMAIL);
     $departmentID = intval($_POST['departmentInput']);
 
-    // Update the personnel data in the database
     $query = $conn->prepare('UPDATE personnel SET firstName=?, lastName=?, jobTitle=?, email=?, departmentID=? WHERE id=?');
     $query->bind_param("ssssii", $firstName, $lastName, $jobTitle, $email, $departmentID, $personnelID);
 

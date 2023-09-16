@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
-
 $executionStartTime = microtime(true);
 
 include("config.php");
@@ -25,13 +22,10 @@ if (mysqli_connect_errno()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate and sanitize the updated data (similar to the add functionality)
-
     $deptID = $_POST['departmentIDInput'];
     $deptName = $_POST['deptNameInput'];
     $locationID = $_POST['locationInput'];
 
-    // Update the personnel data in the database
     $query = $conn->prepare('UPDATE department SET name=?, locationID=? WHERE id=?');
     $query->bind_param("sii", $deptName, $locationID, $deptID);
 

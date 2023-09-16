@@ -1,13 +1,4 @@
 <?php
-
-	// example use from browser
-	// http://localhost/companydirectory/libs/php/getAllDepartments.php
-
-	// remove next two lines for production	
-	
-	ini_set('display_errors', 'On');
-	error_reporting(E_ALL);
-
 	$executionStartTime = microtime(true);
 
 	include("config.php");
@@ -32,8 +23,6 @@
 
 	}	
 
-	// SQL does not accept parameters and so is not prepared
-//$query = "SELECT p.id, CONCAT(p.name,'(',l.name,')') as name, p.locationID FROM `department` p JOIN location l ON l.id = p.locationID";
 	$query = 'SELECT department.id, department.name, locationID, location.name AS locname FROM department JOIN location ON location.id = department.locationID';
 
 	$result = $conn->query($query);

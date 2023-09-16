@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Directory</title>
+    <meta name="author" content="Victor Sebiotimo">
+    <meta name="description" content="Company Directory Application">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/png" href="images/favicon.png"/>
+    <link rel="stylesheet" href="libs/bootstrap/package/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="libs/font-awesome/package/css/all.min.css">
+    <link href="css/style.css" rel="stylesheet" />  
+</head>
+<body>
+
+<!-- NAVIGATION-->
+<header class="bg-dark text-white py-3">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-6 text-center text-md-left mb-3 mb-md-0">
+                <img src="images/logo.png?v=2" alt="Company Logo" width="300px" height="auto">
+            </div>
+            <div class="col-12 col-md-6 d-flex justify-content-end">
+                <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link bg-light text-black" id="personnels-tab" data-toggle="tab" href="#personnels" role="tab" aria-controls="personnels" aria-selected="true">Personnels</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bg-light text-black" id="departments-tab" data-toggle="tab" href="#departments" role="tab" aria-controls="departments" aria-selected="false">Departments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link bg-light text-black" id="location-tab" data-toggle="tab" href="#location" role="tab" aria-controls="location" aria-selected="false">Location</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div class="container mt-4">
+        <div class="tab-content" id="myTabsContent">
+
+            <!-- PERSONNEL TAB -->
+            <div class="tab-pane fade" id="personnels" role="tabpanel" aria-labelledby="personnels-tab">
+                <h2> Personnels </h2><br>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <button type="button" data-toggle="modal"  data-target="#addPersonnelModal" class="btn btn-dark">
+                            <i class="fas fa-plus"></i>
+                            <span class="btn-text d-none d-md-inline">Add Personnel</span>
+                        </button>
+                        <div class="mx-4"></div><div class="mx-4"></div><div class="mx-4"></div><div class="mx-*8"></div>
+                        <input type="text" class="form-control" id="searchInputPersonnel" placeholder="Search...">
+                        <button class="btn btn-dark" id="searchButtonPersonnel">
+                            <i class="fas fa-search"></i>
+                            <span class="btn-text d-none d-md-inline">Search</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tblpersonnel" class="table table-striped searchable-table tblfloat">
+                      <thead>
+                        <tr>
+                          <th scope="col">Full Name</th>
+                          <th scope="col" class="d-none d-md-table-cell">Job Title</th>
+                          <th scope="col" class="d-none d-md-table-cell">Email</th>
+                          <th scope="col">Department</th>
+                          <th scope="col" class="d-none d-md-table-cell">Location</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody id="personnel_data">
+                        <div id="loadIndPersonnel" class="loading-indicator">
+                            <img src="images/loading.gif" class="loading-indicator-image" alt="Loading..." />
+                         </div>
+                      </tbody>
+                    </table>
+                    
+                </div>
+                
+            </div>
+
+            <!-- DEPARTMENT TAB -->
+            <div class="tab-pane fade" id="departments" role="tabpanel" aria-labelledby="departments-tab">
+                <h2> Departments </h2><br>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <button type="button" data-toggle="modal"  data-target="#addDepartmentModal" class="btn btn-dark">
+                            <i class="fas fa-plus"></i>
+                            <span class="btn-text d-none d-md-inline">Add Department</span>
+                        </button>
+                        <div class="mx-4"></div><div class="mx-4"></div><div class="mx-4"></div><div class="mx-*8"></div>
+                        <input type="text" class="form-control" id="searchInputDept" placeholder="Search...">
+                        <button class="btn btn-dark" id="searchButtonDept">
+                            <i class="fas fa-search"></i>
+                            <span class="btn-text d-none d-md-inline">Search</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tbldept" class="table table-striped searchable-table tblfloat">
+                      <thead>
+                        <tr>
+                          <th scope="col">Department</th>
+                          <th scope="col" class="d-none d-md-table-cell">Location</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody id="department_data">
+                        <div id="loadIndDepartment" class="loading-indicator">
+                            <img src="images/loading.gif" class="loading-indicator-image" alt="Loading..." />
+                         </div>
+                      </tbody>
+                    </table>
+                    
+                </div>
+            </div>
+
+            <!-- LOCATION TAB -->
+            <div class="tab-pane fade" id="location" role="tabpanel" aria-labelledby="location-tab">
+                <h2> Locations </h2><br>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <button type="button" data-toggle="modal"  data-target="#addLocationModal" class="btn btn-dark">
+                            <i class="fas fa-plus"></i>
+                            <span class="btn-text d-none d-md-inline">Add Location</span>
+                        </button>
+                        <div class="mx-4"></div><div class="mx-4"></div><div class="mx-4"></div><div class="mx-*8"></div>
+                        <input type="text" class="form-control" id="searchInputLoc" placeholder="Search...">
+                        <button class="btn btn-dark" id="searchButtonLoc">
+                            <i class="fas fa-search"></i>
+                            <span class="btn-text d-none d-md-inline">Search</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tbllocation" class="table table-striped searchable-table tblfloat">
+                      <thead>
+                        <tr>
+                          <th scope="col">Location</th>
+                          <th scope="col">Edit</th>
+                          <th scope="col">Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody id="location_data">
+                        <div id="loadIndLocation" class="loading-indicator">
+                            <img src="images/loading.gif" class="loading-indicator-image" alt="Loading..." />
+                         </div>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ADD PERSONNEL-->
+    <div class="modal fade" id="addPersonnelModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Add Personnel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body add_personnel">
+                    <form id="addPersonnelForm">
+                        <div class="form-group">
+                            <label for="firstNameInput">First Name</label>
+                            <input type="text" class="form-control" id="firstNameInput" name="firstNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastNameInput">Last Name</label>
+                            <input type="text" class="form-control" id="lastNameInput" name="lastNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobTitleInput">Job Title</label>
+                            <input type="text" class="form-control" id="jobTitleInput" name="jobTitleInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailInput">Email</label>
+                            <input type="email" class="form-control" id="emailInput" name="emailInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentInput">Department</label>
+                            <select class="form-control departmentSel" id="departmentInput" name="departmentInput" required></select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="addPersonnelButton">Add Personnel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- EDIT PERSONNEL-->
+    <div class="modal fade" id="editPersonnelModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Edit Personnel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body edit_personnel">
+                        <div class="form-group">
+                            <label for="firstNameInput">First Name</label> 
+                            <input type="text" id="personnelIDInput" name="personnelID" hidden>
+                            <input type="text" class="form-control" id="firstNameInput" name="firstNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastNameInput">Last Name</label>
+                            <input type="text" class="form-control" id="lastNameInput" name="lastNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobTitleInput">Job Title</label>
+                            <input type="text" class="form-control" id="jobTitleInput" name="jobTitleInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailInput">Email</label>
+                            <input type="email" class="form-control" id="emailInput" name="emailInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentInput">Department ID</label>
+                            <select class="form-control" id="departmentInput" name="departmentInput" required></select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" onClick="editPersonnel()">Edit Personnel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- VIEW PERSONNEL-->
+    <div class="modal fade" id="viewPersonnelModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >View Personnel</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body view_personnel">
+                        <div class="form-group">
+                            <label for="firstNameInput">First Name</label> 
+                            <input type="text" class="form-control" id="firstNameInput" name="firstNameInput" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastNameInput">Last Name</label>
+                            <input type="text" class="form-control" id="lastNameInput" name="lastNameInput" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobTitleInput">Job Title</label>
+                            <input type="text" class="form-control" id="jobTitleInput" name="jobTitleInput" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="emailInput">Email</label>
+                            <input type="email" class="form-control" id="emailInput" name="emailInput" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentInput">Department ID</label>
+                            <select class="form-control" id="departmentInput" name="departmentInput" disabled readonly></select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DELETE PERSONNEL-->
+    <div id="deletePersonnelModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Personnel</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete these Records?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <input type="hidden" id="delete_id">
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" onclick="deletePersonnel()" value="Delete">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ADD DEPARTMENT-->
+    <div class="modal fade" id="addDepartmentModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Add Department</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body add_department">
+                    <form id="addDepartmentForm">
+                        <div class="form-group">
+                            <label for="firstNameInput">Name</label> 
+                            <input type="text" class="form-control" id="deptNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentInput">Location</label>
+                            <select class="form-control" id="locationInput" required></select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" onClick="addDepartment()">Add Department</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- VIEW DEPARTMENT-->
+    <div class="modal fade" id="viewDepartmentModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >View Department</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body view_department">
+                    <!-- Form to collect user input -->
+                        <div class="form-group">
+                            <label for="firstNameInput">Name</label> 
+                            <input type="text" class="form-control" id="deptNameInput" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentInput">Location</label>
+                            <select class="form-control" id="locationInput" disabled readonly></select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- EDIT DEPARTMENT-->
+    <div class="modal fade" id="editDepartmentModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Edit Department</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body edit_department">
+                    <!-- Form to collect user input -->
+                        <div class="form-group">
+                            <label for="firstNameInput">Name</label> 
+                            <input type="text" id="departmentIDInput" hidden>
+                            <input type="text" class="form-control" id="deptNameInput" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="departmentInput">Location</label>
+                            <select class="form-control" id="locationInput" required></select>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" onClick="editDepartment()">Edit Department</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DELETE DEPARTMENT-->
+    <div id="deleteDepartmentModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Department</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete these Records?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <input type="hidden" id="department_id">
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" onclick="deleteDepartment()" value="Delete">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- ADD LOCATION-->
+    <div class="modal fade" id="addLocationModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Add Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body add_location">
+                    <form id="addLocationForm">
+                        <div class="form-group">
+                            <label for="firstNameInput">Name</label> 
+                            <input type="text" class="form-control" id="locationNameInput" required>
+                        </div>
+                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" onClick="addLocation()">Add Location</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- VIEW LOCATION-->
+    <div class="modal fade" id="viewLocationModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >View Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body view_location">
+                    <!-- Form to collect user input -->
+                        <div class="form-group">
+                            <label for="LocationNameInput">Name</label> 
+                            <input type="text" class="form-control" id="locationNameInput" readonly>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- EDIT LOCATION-->
+    <div class="modal fade" id="editLocationModal" tabindex="-1" role="dialog"  aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Edit Location</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body edit_location">
+                    <!-- Form to collect user input -->
+                        <div class="form-group">
+                            <label for="LocationNameInput">Name</label>
+                            <input type="text" class="form-control" id="locationIDInput" hidden> 
+                            <input type="text" class="form-control" id="locationNameInput" required>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" onClick="editLocation()">Edit Location</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- DELETE LOCATION-->
+    <div id="deleteLocationModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Location</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete these Records?</p>
+                    <p class="text-danger">This action cannot be undone.</p>
+                </div>
+                <input type="hidden" id="location_id">
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" onclick="deleteLocation()" value="Delete">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="libs/jquery-3.7.1/package/dist/jquery.min.js"></script>
+    <script src="libs/popper/package/dist/popper.min.js"></script>
+    <script src="libs/bootstrap/package/dist/js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

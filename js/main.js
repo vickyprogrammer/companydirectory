@@ -5,7 +5,6 @@ $(document).ready(function() {
 });
 
 
-
 //MENU OPTION STORAGE ON BROWSER
 const selectedTab = localStorage.getItem('selectedTab');
 if (selectedTab) {
@@ -20,14 +19,24 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
 });
 
 
+
+// CONVERT A STRING TO TITLE CASE
+function toTitleCase(str) {
+  return str.replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+
+
+
 //LOAD PERSONNEL TABLE AND OPTION
 var loadIndPersonnel = document.getElementById("loadIndPersonnel");
 
 function personnelList() {
     $.ajax({
         type: 'get',
-        url: "api/getAll.php",
-        dataType: 'json',
+        url: "api/getAll.php?stamp=" + new Date().getTime(),
+        dataType: "json",
         success: function(get_data) {
             if (get_data.status && get_data.status.code === "200") {
                 var response = get_data.data;
@@ -70,44 +79,57 @@ function personnelList() {
 
 
 //ADD PERSONNEL FUNCTION
-$("#addPersonnelButton").click(function() {
-    var formData = $("#addPersonnelForm").serialize();
+function addPersonnel() {
+    var firstNameInput = toTitleCase($('.add_personnel #firstNameInput').val());
+    var lastNameInput = toTitleCase($('.add_personnel #lastNameInput').val());
+    var jobTitleInput = toTitleCase($('.add_personnel #jobTitleInput').val());
+    var emailInput = $('.add_personnel #emailInput').val();
+    var departmentInput = $('.add_personnel #departmentInput').val();
     $.ajax({
+        type: 'POST',
+        data: {
+            firstNameInput: firstNameInput,
+            lastNameInput: lastNameInput,
+            jobTitleInput: jobTitleInput,
+            emailInput: emailInput,
+            departmentInput: departmentInput,
+        },
         url: "api/insertPersonnel.php",
-        type: "POST",
-        data: formData,
         dataType: "json",
-        success: function(response) {
-            if (response.status.code === "200") {
-                alert("Personnel added successfully!");
-                $("#addPersonnelModal").modal("hide");
+        success: function(data) {
+            var response = data.status;
+            if (data.status.code === "200") {
+                $('#addPersonnelModal').modal('hide');
                 personnelList();
                 departmentList();
                 locationList();
+                alert(response.description);
             } else {
-                alert("Error: " + response.status.description);
+                $('#addPersonnelModal').modal('hide');
+                alert(response.description);
             }
-        },
-        error: function() {
-            alert("Error: Unable to communicate with the server.");
         }
-    });
-});
+
+    })
+}
+
 
 
 // VIEW PERSONNEL
 function viewPersonnel(id) {
+    var data;
     $.ajax({
         type: "GET",
         url: "api/getPersonnelByID.php?id=" + id,
+        dataType: "json",
         success: function(datax) {
-            var response = datax.data.personnel[0];
-            $('.edit_personnel #personnelIDInput').val(response.id);
-            $('.edit_personnel #firstNameInput').val(response.firstName);
-            $('.edit_personnel #lastNameInput').val(response.lastName);
-            $('.edit_personnel #jobTitleInput').val(response.jobTitle);
-            $('.edit_personnel #emailInput').val(response.email);
-            var departmentID = response.departmentID;
+            var responsez = datax.data.personnel[0];
+            $('.edit_personnel #personnelIDInput').val(responsez.id);
+            $('.edit_personnel #firstNameInput').val(responsez.firstName);
+            $('.edit_personnel #lastNameInput').val(responsez.lastName);
+            $('.edit_personnel #jobTitleInput').val(responsez.jobTitle);
+            $('.edit_personnel #emailInput').val(responsez.email);
+            var departmentID = responsez.departmentID;
 
             var departmentDropdown = $('.edit_personnel #departmentInput, .view_personnel #departmentInput');
             departmentDropdown.empty();
@@ -121,11 +143,11 @@ function viewPersonnel(id) {
 
             departmentDropdown.val(departmentID);
 
-            $('.view_personnel #personnelIDInput').val(response.id);
-            $('.view_personnel #firstNameInput').val(response.firstName);
-            $('.view_personnel #lastNameInput').val(response.lastName);
-            $('.view_personnel #jobTitleInput').val(response.jobTitle);
-            $('.view_personnel #emailInput').val(response.email);
+            $('.view_personnel #personnelIDInput').val(responsez.id);
+            $('.view_personnel #firstNameInput').val(responsez.firstName);
+            $('.view_personnel #lastNameInput').val(responsez.lastName);
+            $('.view_personnel #jobTitleInput').val(responsez.jobTitle);
+            $('.view_personnel #emailInput').val(responsez.email);
         }
     });
 }
@@ -135,12 +157,11 @@ function viewPersonnel(id) {
 //EDIT PERSONNEL
 function editPersonnel() {
     var personnelIDInput = $('.edit_personnel #personnelIDInput').val();
-    var firstNameInput = $('.edit_personnel #firstNameInput').val();
-    var lastNameInput = $('.edit_personnel #lastNameInput').val();
-    var jobTitleInput = $('.edit_personnel #jobTitleInput').val();
+    var firstNameInput = toTitleCase($('.edit_personnel #firstNameInput').val());
+    var lastNameInput = toTitleCase($('.edit_personnel #lastNameInput').val());
+    var jobTitleInput = toTitleCase($('.edit_personnel #jobTitleInput').val());
     var emailInput = $('.edit_personnel #emailInput').val();
     var departmentInput = $('.edit_personnel #departmentInput').val();
-    viewPersonnel(personnelIDInput);
     $.ajax({
         type: 'POST',
         data: {
@@ -152,6 +173,7 @@ function editPersonnel() {
             departmentInput: departmentInput,
         },
         url: "api/editPersonnel.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -180,6 +202,7 @@ function deletePersonnel() {
             id: id,
         },
         url: "api/deletePersonnelByID.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -201,8 +224,8 @@ var loadIndDepartment = document.getElementById("loadIndDepartment");
 function departmentList() {
     $.ajax({
         type: 'GET',
-        url: "api/getAllDepartments.php",
-        dataType: 'json',
+        url: "api/getAllDepartments.php?stamp=" + new Date().getTime(),
+        dataType: "json",
         success: function(get_data) {
             if (get_data.status && get_data.status.code === "200") {
                 var response = get_data.data;
@@ -240,7 +263,7 @@ function departmentList() {
 
 //ADD DEPARTMENT
 function addDepartment() {
-    var deptNameInput = $('.add_department #deptNameInput').val();
+    var deptNameInput = toTitleCase($('.add_department #deptNameInput').val());
     var locationInput = $('.add_department #locationInput').val();
     $.ajax({
         type: 'POST',
@@ -249,6 +272,7 @@ function addDepartment() {
             locationInput: locationInput,
         },
         url: "api/insertDepartment.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -272,6 +296,7 @@ function viewDepartment(id) {
     $.ajax({
         type: "GET",
         url: "api/getDepartmentByID.php?id=" + id,
+        dataType: "json",
         success: function(datax) {
             var response = datax.data.department[0];
             var locationID = response.locationID;
@@ -299,7 +324,7 @@ function viewDepartment(id) {
 
 // EDIT DEPARTMENT
 function editDepartment() {
-    var deptNameInput = $('.edit_department #deptNameInput').val();
+    var deptNameInput = toTitleCase($('.edit_department #deptNameInput').val());
     var locationInput = $('.edit_department #locationInput').val();
     var departmentIDInput = $('.edit_department #departmentIDInput').val();
 
@@ -311,6 +336,7 @@ function editDepartment() {
             locationInput: locationInput,
         },
         url: "api/editDepartment.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -342,6 +368,7 @@ function deleteDepartment() {
             id: id,
         },
         url: "api/deleteDepartmentByID.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -364,8 +391,8 @@ var loadIndLocation = document.getElementById("loadIndLocation");
 function locationList() {
     $.ajax({
         type: 'GET',
-        url: "api/getAllLocations.php",
-        dataType: 'json',
+        url: "api/getAllLocations.php?stamp=" + new Date().getTime(),
+        dataType: "json",
         success: function(get_data) {
             if (get_data.status && get_data.status.code === "200") {
                 var response = get_data.data;
@@ -401,13 +428,14 @@ function locationList() {
 
 //ADD LOCATION
 function addLocation() {
-    var locationNameInput = $('.add_location #locationNameInput').val();
+    var locationNameInput = toTitleCase($('.add_location #locationNameInput').val());
     $.ajax({
         type: 'POST',
         data: {
             locationNameInput: locationNameInput,
         },
         url: "api/insertLocation.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -434,6 +462,7 @@ function viewLocation(id) {
             id: id,
         },
         url: "api/getLocationByID.php",
+       dataType: "json",
         success: function(datax) {
             var response = datax.data[0];
             $('.view_location #locationNameInput').val(response.name);
@@ -448,7 +477,7 @@ function viewLocation(id) {
 //EDIT LOCATION
 function editLocation() {
     var locationIDInput = $('.edit_location #locationIDInput').val();
-    var locationNameInput = $('.edit_location #locationNameInput').val();
+    var locationNameInput = toTitleCase($('.edit_location #locationNameInput').val());
     $.ajax({
         type: 'POST',
         data: {
@@ -456,6 +485,7 @@ function editLocation() {
             locationNameInput: locationNameInput,
         },
         url: "api/editLocation.php",
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {
@@ -484,7 +514,9 @@ function deleteLocation() {
         data: {
             id: id,
         },
-        url: "api/deleteLocationByID.php",
+        url: "api/deleteLocationByID.php?" + new Date().getTime(),
+        cache: false,
+        dataType: "json",
         success: function(data) {
             var response = data.status;
             if (data.status.code === "200") {

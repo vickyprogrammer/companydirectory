@@ -24,36 +24,41 @@
 	}	
 
 	
-	$id = $_POST['id'];
-	$query = $conn->prepare('DELETE FROM department WHERE id = ?');
-	
-	$query->bind_param("i", $id);
+$id = $_POST['id'];
 
-	$query->execute();
-	
-	if (false === $query) {
+$checkQuery = $conn->prepare('SELECT 1 FROM personnel WHERE departmentID = ? LIMIT 1');
+$checkQuery->bind_param("i", $id);
+$checkQuery->execute();
+$result = $checkQuery->get_result();
 
-		$output['status']['code'] = "400";
-		$output['status']['name'] = "executed";
-		$output['status']['description'] = "query failed";	
-		$output['data'] = [];
+if ($result->num_rows > 0) {
+    $output['status']['code'] = "400";
+    $output['status']['name'] = "executed";
+    $output['status']['description'] = "Department exists in personnel table. Cannot delete department.";
+    $output['data'] = [];
 
-		mysqli_close($conn);
+    mysqli_close($conn);
+    echo json_encode($output);
+    exit;
+}
 
-		echo json_encode($output); 
+$deleteQuery = $conn->prepare('DELETE FROM department WHERE id = ?');
+$deleteQuery->bind_param("i", $id);
+$deleteQuery->execute();
 
-		exit;
+if ($deleteQuery->error) {
+    $output['status']['code'] = "400";
+    $output['status']['name'] = "executed";
+    $output['status']['description'] = "Error deleting department: " . $deleteQuery->error;
+    $output['data'] = [];
+} else {
+    $output['status']['code'] = "200";
+    $output['status']['name'] = "ok";
+    $output['status']['description'] = "Department deleted successfully.";
+    $output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
+    $output['data'] = [];
+}
 
-	}
-
-	$output['status']['code'] = "200";
-	$output['status']['name'] = "ok";
-	$output['status']['description'] = "success";
-	$output['status']['returnedIn'] = (microtime(true) - $executionStartTime) / 1000 . " ms";
-	$output['data'] = [];
-	
-	mysqli_close($conn);
-
-	echo json_encode($output); 
-
+mysqli_close($conn);
+echo json_encode($output);
 ?>

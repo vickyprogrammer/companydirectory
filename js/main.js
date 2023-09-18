@@ -35,7 +35,7 @@ var loadIndPersonnel = document.getElementById("loadIndPersonnel");
 function personnelList() {
     $.ajax({
         type: 'get',
-        url: "api/getAll.php?stamp=" + new Date().getTime(),
+        url: "api/getAll.php?" + new Date().getTime(),
         dataType: "json",
         success: function(get_data) {
             if (get_data.status && get_data.status.code === "200") {
@@ -107,10 +107,10 @@ function addPersonnel() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
                 $('#addPersonnelModal').modal('hide');
-                alert(response.description);
+                showErrorAlert(response.description);
             }
             
             loadIndGeneral.style.display = 'none';
@@ -129,8 +129,11 @@ function addPersonnel() {
 function viewPersonnel(id) {
     var data;
     $.ajax({
-        type: "GET",
-        url: "api/getPersonnelByID.php?id=" + id,
+        type: "POST",
+        data: {
+            id: id,
+        },
+        url: "api/getPersonnelByID.php",
         dataType: "json",
         success: function(datax) {
             var responsez = datax.data.personnel[0];
@@ -195,10 +198,10 @@ function editPersonnel() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
                 $('#editPersonnelModal').modal('hide');
-                alert(response.description);
+                showErrorAlert(response.description);
             }
             loadIndGeneral.style.display = 'none';
         },
@@ -228,9 +231,9 @@ function deletePersonnel() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
-                alert(response.description);
+                showErrorAlert(response.description);
             }
         }
     })
@@ -243,7 +246,7 @@ var loadIndDepartment = document.getElementById("loadIndDepartment");
 function departmentList() {
     $.ajax({
         type: 'GET',
-        url: "api/getAllDepartments.php?stamp=" + new Date().getTime(),
+        url: "api/getAllDepartments.php?" + new Date().getTime(),
         dataType: "json",
         success: function(get_data) {
             if (get_data.status && get_data.status.code === "200") {
@@ -303,10 +306,10 @@ function addDepartment() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
                 $('#addDepartmentModal').modal('hide');
-                alert(response.description);
+                showErrorAlert(response.description);
             }
 
             loadIndGeneral.style.display = 'none';
@@ -323,8 +326,11 @@ function addDepartment() {
 //VIEW DEPARTMENT
 function viewDepartment(id) {
     $.ajax({
-        type: "GET",
-        url: "api/getDepartmentByID.php?id=" + id,
+        type: "POST",
+        data: {
+            id: id,
+        },
+        url: "api/getDepartmentByID.php",
         dataType: "json",
         success: function(datax) {
             var response = datax.data.department[0];
@@ -376,10 +382,10 @@ function editDepartment() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
                 $('#editDepartmentModal').modal('hide');
-                alert(response.description);
+                showErrorAlert(response.description);
             }
             loadIndGeneral.style.display = 'none';
         },
@@ -412,9 +418,9 @@ function deleteDepartment() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
-                alert(response.description);
+                showErrorAlert(response.description);
             }
         }
     })
@@ -428,7 +434,7 @@ var loadIndLocation = document.getElementById("loadIndLocation");
 function locationList() {
     $.ajax({
         type: 'GET',
-        url: "api/getAllLocations.php?stamp=" + new Date().getTime(),
+        url: "api/getAllLocations.php?" + new Date().getTime(),
         dataType: "json",
         success: function(get_data) {
             if (get_data.status && get_data.status.code === "200") {
@@ -484,10 +490,10 @@ function addLocation() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
                 $('#addLocationModal').modal('hide');
-                alert(response.description);
+                showErrorAlert(response.description);
             }
 
             loadIndGeneral.style.display = 'none';
@@ -496,9 +502,10 @@ function addLocation() {
             loadIndGeneral.style.display = 'none';
         }
     });
+
+    // Hide the "Add" and "Close" buttons
     $('#addButton, #closeButton').hide();
 }
-
 
 
 // VIEW LOCATION
@@ -543,10 +550,10 @@ function editLocation() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
                 $('#editLocationModal').modal('hide');
-                alert(response.description);
+                showErrorAlert(response.description);
             }
 
             loadIndGeneral.style.display = 'none';
@@ -579,9 +586,9 @@ function deleteLocation() {
                 personnelList();
                 departmentList();
                 locationList();
-                alert(response.description);
+                showSuccessAlert(response.description);
             } else {
-                alert(response.description);
+                showErrorAlert(response.description);
             }
         }
     })
@@ -641,3 +648,57 @@ $("#addPersonnelModal, #addDepartmentModal, #addLocationModal").on('hidden.bs.mo
 $('#addPersonnelModal, #editPersonnelModal, #addDepartmentModal, #editDepartmentModal, #addLocationModal, #editLocationModal').on('show.bs.modal', function () {
     $('#addButton, #editButton, #closeButton').show();
 });
+
+
+function showSuccessAlert(message) {
+    var floatingAlertContainer = $('#floatingAlertContainer');
+    var floatingAlert = $('#floatingAlert');
+
+    floatingAlertContainer.removeClass('d-none');
+    floatingAlertContainer.addClass('show');
+
+    floatingAlert.html(`
+        <div class="alert alert-success shadow my-3" role="alert" style="border-radius: 3px">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true" style="color:#155724">&times;</span>
+            </button>
+            <div class="text-center">
+               <i class="fa-solid fa-circle-check fa-2xl"></i>
+            </div><br>
+            <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Done! </b>${message}</p>
+        </div>
+    `);
+
+    setTimeout(function() {
+        hideFloatingAlert();
+    }, 2000); 
+}
+
+
+function showErrorAlert(message) {
+    var floatingAlertContainer = $('#floatingAlertContainer');
+    var floatingAlert = $('#floatingAlert');
+    floatingAlertContainer.removeClass('d-none');
+    floatingAlertContainer.addClass('show');
+    floatingAlert.html(`
+        <div class="alert alert-danger shadow my-3" role="alert" style="border-radius: 3px">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true" style="color:#721C24">&times;</span>
+            </button>
+            <div class="text-center">
+                <i class="fa-solid fa-circle-exclamation fa-2xl"></i>
+            </div> <br>
+            <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Danger!</b>${message}</p>
+        </div>
+    `);
+
+       setTimeout(function() {
+        hideFloatingAlert();
+    }, 4000);
+}
+
+function hideFloatingAlert() {
+    var floatingAlertContainer = $('#floatingAlertContainer');
+    floatingAlertContainer.addClass('d-none');
+    floatingAlertContainer.removeClass('show');
+}

@@ -1,10 +1,10 @@
 .tab-pane {
-        display: none;
-    }
-    
-    .tab-pane.active {
-        display: block;
-    }
+    display: none;
+}
+
+.tab-pane.active {
+    display: block;
+}
 
 .table-container {
 max-height: 700px;
@@ -35,4 +35,12 @@ display: block;
 margin: 0 auto;
 height: 70px; 
 width: 70px;
+}
+
+#floatingAlertContainer {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 9999; /* Adjust the z-index as needed */
 }

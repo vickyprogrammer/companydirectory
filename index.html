@@ -162,6 +162,9 @@
         </div>
     </div>
 
+    <div id="loadIndGeneral" class="loading-indicator" style="display: none;">
+            <img src="images/loading.gif" class="loading-indicator-image" alt="Loading..." />
+    </div>
 
     <!-- ADD PERSONNEL-->
     <div class="modal fade" id="addPersonnelModal" tabindex="-1" role="dialog"  aria-hidden="true">
@@ -198,8 +201,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark" onClick="addPersonnel()">Add Personnel</button>
+                    <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="addButton" onClick="addPersonnel()">Add Personnel</button>
                 </div>
             </div>
         </div>
@@ -241,8 +244,8 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark" onClick="editPersonnel()">Edit Personnel</button>
+                    <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="editButton" onClick="editPersonnel()">Edit Personnel</button>
                 </div>
             </div>
         </div>
@@ -335,8 +338,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark" onClick="addDepartment()">Add Department</button>
+                    <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="addButton" onClick="addDepartment()">Add Department</button>
                 </div>
             </div>
         </div>
@@ -395,13 +398,12 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark" onClick="editDepartment()">Edit Department</button>
+                    <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="editButton" onClick="editDepartment()">Edit Department</button>
                 </div>
             </div>
         </div>
     </div>
-
 
     <!-- DELETE DEPARTMENT-->
     <div id="deleteDepartmentModal" class="modal fade">
@@ -446,12 +448,13 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark" onClick="addLocation()">Add Location</button>
+                    <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="addButton" onClick="addLocation()">Add Location</button>
                 </div>
             </div>
         </div>
     </div>
+
 
 
 
@@ -500,8 +503,8 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-dark" onClick="editLocation()">Edit Location</button>
+                    <button type="button" class="btn btn-secondary" id="closeButton" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark" id="editButton" onClick="editLocation()">Edit Location</button>
                 </div>
             </div>
         </div>
@@ -528,11 +531,9 @@
             </div>
         </div>
     </div>
-   <script src="
-https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+   <!--<script src="libs/popper/package/dist/popper.min.js"></script>-->
+    <script src="libs/jquery-3.7.1/package/dist/jquery.min.js"></script>
     <script src="libs/bootstrap/package/dist/js/bootstrap.min.js"></script>
-    <script src="js/main.js?v=2"></script>
+    <script src="js/main.js?v=4"></script>
 </body>
 </html>

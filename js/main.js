@@ -85,6 +85,10 @@ function addPersonnel() {
     var jobTitleInput = toTitleCase($('.add_personnel #jobTitleInput').val());
     var emailInput = $('.add_personnel #emailInput').val();
     var departmentInput = $('.add_personnel #departmentInput').val();
+    
+    var loadIndGeneral = document.getElementById('loadIndGeneral');
+    loadIndGeneral.style.display = 'block';
+
     $.ajax({
         type: 'POST',
         data: {
@@ -108,10 +112,16 @@ function addPersonnel() {
                 $('#addPersonnelModal').modal('hide');
                 alert(response.description);
             }
+            
+            loadIndGeneral.style.display = 'none';
+        },
+        error: function(error) {
+            loadIndGeneral.style.display = 'none';
         }
-
-    })
+    });
+    $('#addButton, #closeButton').hide();
 }
+
 
 
 
@@ -162,6 +172,10 @@ function editPersonnel() {
     var jobTitleInput = toTitleCase($('.edit_personnel #jobTitleInput').val());
     var emailInput = $('.edit_personnel #emailInput').val();
     var departmentInput = $('.edit_personnel #departmentInput').val();
+
+    var loadIndGeneral = document.getElementById('loadIndGeneral');
+    loadIndGeneral.style.display = 'block';
+
     $.ajax({
         type: 'POST',
         data: {
@@ -186,10 +200,15 @@ function editPersonnel() {
                 $('#editPersonnelModal').modal('hide');
                 alert(response.description);
             }
+            loadIndGeneral.style.display = 'none';
+        },
+        error: function(error) {
+            loadIndGeneral.style.display = 'none';
         }
-
-    })
+    });
+    $('#editButton, #closeButton').hide();
 }
+
 
 
 //DELETE PERSONNEL
@@ -265,6 +284,10 @@ function departmentList() {
 function addDepartment() {
     var deptNameInput = toTitleCase($('.add_department #deptNameInput').val());
     var locationInput = $('.add_department #locationInput').val();
+
+    var loadIndGeneral = document.getElementById('loadIndGeneral');
+    loadIndGeneral.style.display = 'block';
+
     $.ajax({
         type: 'POST',
         data: {
@@ -285,10 +308,16 @@ function addDepartment() {
                 $('#addDepartmentModal').modal('hide');
                 alert(response.description);
             }
-        }
 
-    })
+            loadIndGeneral.style.display = 'none';
+        },
+        error: function(error) {
+            loadIndGeneral.style.display = 'none';
+        }
+    });
+    $('#addButton, #closeButton').hide();
 }
+
 
 
 //VIEW DEPARTMENT
@@ -328,6 +357,9 @@ function editDepartment() {
     var locationInput = $('.edit_department #locationInput').val();
     var departmentIDInput = $('.edit_department #departmentIDInput').val();
 
+    var loadIndGeneral = document.getElementById('loadIndGeneral');
+    loadIndGeneral.style.display = 'block';
+
     $.ajax({
         type: 'POST',
         data: {
@@ -349,10 +381,15 @@ function editDepartment() {
                 $('#editDepartmentModal').modal('hide');
                 alert(response.description);
             }
+            loadIndGeneral.style.display = 'none';
+        },
+        error: function(error) {
+            loadIndGeneral.style.display = 'none';
         }
-
-    })
+    });
+    $('#editButton, #closeButton').hide();
 }
+
 
 
 
@@ -429,6 +466,10 @@ function locationList() {
 //ADD LOCATION
 function addLocation() {
     var locationNameInput = toTitleCase($('.add_location #locationNameInput').val());
+
+    var loadIndGeneral = document.getElementById('loadIndGeneral');
+    loadIndGeneral.style.display = 'block';
+
     $.ajax({
         type: 'POST',
         data: {
@@ -448,10 +489,16 @@ function addLocation() {
                 $('#addLocationModal').modal('hide');
                 alert(response.description);
             }
-        }
 
-    })
+            loadIndGeneral.style.display = 'none';
+        },
+        error: function(error) {
+            loadIndGeneral.style.display = 'none';
+        }
+    });
+    $('#addButton, #closeButton').hide();
 }
+
 
 
 // VIEW LOCATION
@@ -478,6 +525,9 @@ function viewLocation(id) {
 function editLocation() {
     var locationIDInput = $('.edit_location #locationIDInput').val();
     var locationNameInput = toTitleCase($('.edit_location #locationNameInput').val());
+    var loadIndGeneral = document.getElementById('loadIndGeneral');
+    loadIndGeneral.style.display = 'block';
+
     $.ajax({
         type: 'POST',
         data: {
@@ -498,10 +548,16 @@ function editLocation() {
                 $('#editLocationModal').modal('hide');
                 alert(response.description);
             }
-        }
 
-    })
+            loadIndGeneral.style.display = 'none';
+        },
+        error: function(error) {
+           loadIndGeneral.style.display = 'none';
+        }
+    });
+    $('#editButton, #closeButton').hide();
 }
+
 
 
 //DELETE LOCATION
@@ -578,4 +634,10 @@ function clearFormFields() {
 }
 $("#addPersonnelModal, #addDepartmentModal, #addLocationModal").on('hidden.bs.modal', function() {
     clearFormFields();
+});
+
+
+// Show the "Add" and "Close" buttons when the modal is shown
+$('#addPersonnelModal, #editPersonnelModal, #addDepartmentModal, #editDepartmentModal, #addLocationModal, #editLocationModal').on('show.bs.modal', function () {
+    $('#addButton, #editButton, #closeButton').show();
 });

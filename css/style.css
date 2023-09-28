@@ -1,46 +1,31 @@
-.tab-pane {
-    display: none;
+html,
+body {
+  background-color: #f9f6ee;
+  margin: 5px 0px 5px 2px;
+  padding: 5px 0px 5px 2px;
+  overflow: hidden;
 }
 
-.tab-pane.active {
-    display: block;
+section {
+  display: flex;
+  flex-flow: column;
+  height: calc(100vh - 20px);
 }
 
-.table-container {
-max-height: 700px;
-overflow-y: auto;
+.tab-content {
+  flex: 1;
+  overflow-y: scroll;
 }
 
-.tblfloat thead {
-position: sticky;
-top: 0;
-background-color: #fff;
-z-index: 1; 
+tr {
+  cursor: default;
 }
 
-
-.loading-indicator {
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-background-color: rgba(255, 255, 255, 0.8);
-padding: 10px;
-border-radius: 5px;
-z-index: 9999;
+.myBtn {
+  width: 70px;
 }
 
-.loading-indicator-image {
-display: block;
-margin: 0 auto;
-height: 70px; 
-width: 70px;
-}
-
-#floatingAlertContainer {
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-z-index: 9999; /* Adjust the z-index as needed */
+.footer {
+  position: fixed;
+  bottom: 0;
 }

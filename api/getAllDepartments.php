@@ -23,7 +23,7 @@
 
 	}	
 
-	$query = 'SELECT department.id, department.name, locationID, location.name AS locname FROM department JOIN location ON location.id = department.locationID';
+	$query = 'SELECT department.id, department.name, locationID, location.name AS locname FROM department JOIN location ON location.id = department.locationID ORDER BY department.name ASC';
 
 	$result = $conn->query($query);
 	

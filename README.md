@@ -1,7 +1,7 @@
 # Company Directory
 ## Screenshots
 
-![App Screenshot](https://victorsebiotimo.co.uk/companydirectory/images/companydirectory.png)
+![App Screenshot](https://victorsebiotimo.co.uk/companydirectory/images/companyscr.png)
 ## Introduction
 This is a Company Directory application that allows you to manage and view information about employees within your company. It utilizes a MySQL database to store employee data and provides an API endpoint using PHP for retrieving and updating this information using AJAX.
 

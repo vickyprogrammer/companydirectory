@@ -1,71 +1,126 @@
-$(document).ready(function() {
-    personnelList();
-    departmentList();
-    locationList();
-});
+  //LOAD ALL TABLES
+  personnelList();
+  departmentList();
+  locationList();
 
-
+//FILTER BUTTON CALLS MODAL
 $("#filterBtn").click(function () {
-  var ascendingOrder = true;
-  if ($("#personnelBtn").hasClass("active")) {
-    var rows = $(".personnelTable tbody tr").toArray();
-        rows.sort(function (a, b) {
-            var textA = $(a).find("td:first").text().toUpperCase();
-            var textB = $(b).find("td:first").text().toUpperCase();
-            if (ascendingOrder) {
-                return textA.localeCompare(textB);
-            } else {
-                return textB.localeCompare(textA);
-            }
-        });
-        ascendingOrder = !ascendingOrder;
-        $(".personnelTable tbody").empty();
-        for (var i = 0; i < rows.length; i++) {
-            $(".personnelTable tbody").append(rows[i]);
+  $.ajax({
+    type: 'GET',
+    url: "api/getAllDepartments.php",
+    dataType: "json",
+    success: function (get_data) {
+      if (get_data.status && get_data.status.code === "200") {
+        var response = get_data.data;
+        var deptoption = '<option value="">Choose department</option>';
+        for (var i = 0; i < response.length; i++) {
+          var deptname = response[i].name;
+          var departmentId = response[i].id;
+          var locname = response[i].locname;
+          deptoption += '<option value="' + departmentId + '">' + deptname + ' (' + locname + ')</option>';
+        $('#filterDepartmentID').html(deptoption);
         }
-  } else {
-    if ($("#departmentsBtn").hasClass("active")) {
-      var rows = $(".departmentTable tbody tr").toArray();
-          rows.sort(function (a, b) {
-              var textA = $(a).find("td:first").text().toUpperCase();
-              var textB = $(b).find("td:first").text().toUpperCase();
-              if (ascendingOrder) {
-                  return textA.localeCompare(textB);
-              } else {
-                  return textB.localeCompare(textA);
-              }
-          });
-          ascendingOrder = !ascendingOrder;
-          $(".departmentTable tbody").empty();
-          for (var i = 0; i < rows.length; i++) {
-              $(".departmentTable tbody").append(rows[i]);
-          };
-    } else {
-      var rows = $(".locationTable tbody tr").toArray();
-          rows.sort(function (a, b) {
-              var textA = $(a).find("td:first").text().toUpperCase();
-              var textB = $(b).find("td:first").text().toUpperCase();
-              if (ascendingOrder) {
-                  return textA.localeCompare(textB);
-              } else {
-                  return textB.localeCompare(textA);
-              }
-          });
-          ascendingOrder = !ascendingOrder;
-          $(".locationTable tbody").empty();
-          for (var i = 0; i < rows.length; i++) {
-              $(".locationTable tbody").append(rows[i]);
-          }
+      }
     }
-  }
+  });
+  $("#filterDepartmentModal").modal("show");
 });
 
-//FUNCTION FOR ADD BUTTON
+
+//FILTER PERSONNEL BY DEPARTMENT ID
+$("#filterDepartmentForm").on("submit", function (e) {
+  // stop the default browser behviour
+  e.preventDefault();
+  var filterDepartmentID = $('#filterDepartmentID').val();
+  //var loadIndGeneral = document.getElementById('loadIndGeneral');
+  //loadIndGeneral.style.display = 'block';
+  $.ajax({
+      type: 'POST',
+      data: {
+        filterDepartmentID: filterDepartmentID,
+    },
+    url: "api/filterByDepartment.php",
+      dataType: "json",
+      success: function (get_data) {
+        if (get_data.status && get_data.status.code === "200") {
+          var response = get_data.data;
+          var tbody = $('.personnelTable tbody');
+          tbody.empty();
+          for (var i = 0; i < response.length; i++) {
+            var firstName = response[i].firstName;
+            var lastName = response[i].lastName;
+            var email = response[i].email;
+            var department = response[i].department;
+            var locationName = response[i].location;
+            var personnelId = response[i].id;
+  
+            var tr = '<tr>';
+            tr += '<td class="align-middle text-nowrap">' + lastName + ' ' + firstName + '</td>';
+            tr += '<td class="align-middle text-nowrap d-none d-md-table-cell">' + department + '</td>';
+            tr += '<td class="align-middle text-nowrap d-none d-md-table-cell">' + locationName + '</td>';
+            tr += '<td class="align-middle text-nowrap d-none d-md-table-cell">' + email + '</td>';
+            tr += '<td class="text-end text-nowrap">';
+            tr += '<button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editPersonnelModal" data-id="' + personnelId + '"> <i class="fa-solid fa-pencil fa-fw"></i></button> '; 
+            tr += '<button type="button" class="btn btn-primary btn-sm deletePersonnelBtn" data-id="' + personnelId + '"> <i class="fa-solid fa-trash fa-fw"></i></button>';
+            tr += '</td>';
+            tr += '</tr>';
+            tbody.append(tr); 
+          }
+          $('#filterDepartmentModal').modal('hide');
+        } else{
+          $('#filterDepartmentModal').modal('hide');
+        }
+      },
+      error: function(error) {
+          //loadIndGeneral.style.display = 'none';
+      }
+  });
+ // $('#editButton, #closeButton').hide();
+});
+
+
+
+//FUNCTION FOR ADD BUTTON - PERSONNEL, DEPARTMENT AND LOCATION
 $("#addBtn").click(function () {
   if ($("#personnelBtn").hasClass("active")) {
+    $.ajax({
+      type: 'GET',
+      url: "api/getAllDepartments.php",
+      dataType: "json",
+      success: function (get_data) {
+        if (get_data.status && get_data.status.code === "200") {
+          var response = get_data.data;
+          var deptoption = '<option value="">Choose department</option>';
+          for (var i = 0; i < response.length; i++) {
+            var deptname = response[i].name;
+            var departmentId = response[i].id;
+            var locname = response[i].locname;
+            deptoption += '<option value="' + departmentId + '">' + deptname + ' (' + locname + ')</option>';
+          $('#addPersonnelDepartment').html(deptoption);
+          }
+        }
+      }
+    });
     $("#addPersonnelModal").modal("show");
   } else {
     if ($("#departmentsBtn").hasClass("active")) {
+      $.ajax({
+        type: 'GET',
+        url: "api/getAllLocations.php",
+        dataType: "json",
+        success: function (get_data) {
+          if (get_data.status && get_data.status.code === "200") {
+            var response = get_data.data;
+            var deptoption = '<option value="">Choose location</option>';
+            for (var i = 0; i < response.length; i++) {
+              var locname = response[i].name;
+              var id = response[i].id;
+              deptoption += '<option value="' + id + '">' + locname + '</option>';
+            $('#addDepartmentLocation').html(deptoption);
+            }
+          }
+        }
+      });
       $("#addDepartmentModal").modal("show");
     } else {
       $("#addLocationModal").modal("show");
@@ -80,7 +135,7 @@ $("#addBtn").click(function () {
 $(document).ready(function() {
   //Default Search
    $("#searchLocationId, #searchDepartmentId").hide();
-   $("#searchPersonnelId").on("input", function() {
+   $("#searchPersonnelId").on("keyup", function() {
     var searchValue = $(this).val().toLowerCase();
     $(".personnelTable tbody tr").each(function() {
       var rowData = $(this).text().toLowerCase();
@@ -96,7 +151,7 @@ $(document).ready(function() {
    $("#personnelBtn").click(function() {
        $("#searchLocationId, #searchDepartmentId").hide();
        $("#searchPersonnelId").show();
-       $("#searchPersonnelId").on("input", function() {
+       $("#searchPersonnelId").on("keyup", function() {
         var searchValue = $(this).val().toLowerCase();
         $(".personnelTable tbody tr").each(function() {
           var rowData = $(this).text().toLowerCase();
@@ -113,7 +168,7 @@ $(document).ready(function() {
    $("#departmentsBtn").click(function() {
        $("#searchLocationId, #searchPersonnelId").hide();
        $("#searchDepartmentId").show();
-       $("#searchDepartmentId").on("input", function() {
+       $("#searchDepartmentId").on("keyup", function() {
         var searchValue2 = $(this).val().toLowerCase();
         $(".departmentTable tbody tr").each(function() {
           var rowData2 = $(this).text().toLowerCase();
@@ -130,7 +185,7 @@ $(document).ready(function() {
    $("#locationsBtn").click(function() {
     $("#searchDepartmentId, #searchPersonnelId").hide();
     $("#searchLocationId").show();
-    $("#searchLocationId").on("input", function() {
+    $("#searchLocationId").on("keyup", function() {
       var searchValue = $(this).val().toLowerCase();
       $(".locationTable tbody tr").each(function() {
         var rowData = $(this).text().toLowerCase();
@@ -147,12 +202,37 @@ $(document).ready(function() {
 
 
  
-//REFRESH BUTTON
-$("#refreshBtn").click(function () {
+//REFRESH TABLE WHEN TAB IS CLICKED
+$("#personnelBtn").click(function () {
+  document.querySelector('#filterBtn').disabled = false;
   personnelList();
+});
+
+$("#departmentsBtn").click(function () {
+  document.querySelector('#filterBtn').disabled = true;
   departmentList();
+});
+
+$("#locationsBtn").click(function () {
+  document.querySelector('#filterBtn').disabled = true;
+
   locationList();
 });
+
+//REFRESH BUTTON
+$("#refreshBtn").click(function () {
+  if ($("#personnelBtn").hasClass("active")) {
+      personnelList();
+  } else {
+    if ($("#departmentsBtn").hasClass("active")) {
+      departmentList();
+    } else {
+      locationList();
+    }
+  }
+});
+
+
 
 //FORMS RESET FUNCTION
 function clearFormFields() {
@@ -165,11 +245,11 @@ $("#addPersonnelModal, #addDepartmentModal, #addLocationModal").on('hidden.bs.mo
 });
 
 
-
+// GET PERSONNEL LIST
 function personnelList() {
   $.ajax({
     type: 'get',
-    url: "api/getAll.php?" + new Date().getTime(),
+    url: "api/getAll.php",
     dataType: "json",
     success: function (get_data) {
       if (get_data.status && get_data.status.code === "200") {
@@ -202,32 +282,27 @@ function personnelList() {
 }
 
 
+//GET DEPARTMENT LIST
 function departmentList() {
   $.ajax({
     type: 'GET',
-    url: "api/getAllDepartments.php?" + new Date().getTime(),
+    url: "api/getAllDepartments.php",
     dataType: "json",
     success: function (get_data) {
       if (get_data.status && get_data.status.code === "200") {
         var response = get_data.data;
         var tbody = $('.departmentTable tbody'); // Select the table body
-
         tbody.empty(); // Clear existing rows
-        var deptoption = '<option value="">Choose department</option>';
         for (var i = 0; i < response.length; i++) {
           var deptname = response[i].name;
           var locname = response[i].locname;
           var departmentId = response[i].id;
-
           var tr = '<tr>';
           tr += '<td class="align-middle text-nowrap">' + deptname + '</td>';
           tr += '<td class="align-middle text-nowrap d-none d-md-table-cell">' + locname + '</td>';
           tr += '<td class="text-end text-nowrap"><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDepartmentModal" data-id="' + departmentId + '"> <i class="fa-solid fa-pencil fa-fw"></i> </button> <button type="button" class="btn btn-primary btn-sm deleteDepartmentBtn" data-id="' + departmentId + '"> <i class="fa-solid fa-trash fa-fw"></i></button></td>';
           tr += '</tr>';
-
-          deptoption += '<option value="' + departmentId + '">' + deptname + ' (' + locname + ')</option>';
           tbody.append(tr);
-        $('#addPersonnelDepartment').html(deptoption);
         }
         
       }
@@ -236,23 +311,20 @@ function departmentList() {
 }
 
 
-
+//GET LOCATION LIST
 function locationList() {
   $.ajax({
     type: 'GET',
-    url: "api/getAllLocations.php?" + new Date().getTime(),
+    url: "api/getAllLocations.php",
     dataType: "json",
     success: function (get_data) {
       if (get_data.status && get_data.status.code === "200") {
         var response = get_data.data;
         var tbody = $('.locationTable tbody'); // Select the table body
-
         tbody.empty(); // Clear existing rows
-        var deptoption = '<option value="">Choose location</option>';
         for (var i = 0; i < response.length; i++) {
           var locname = response[i].name;
           var id = response[i].id;
-
           var tr = '<tr>';
           tr += '<td class="align-middle text-nowrap">' + locname + '</td>';
           tr += '<td class="text-end text-nowrap">';
@@ -260,9 +332,7 @@ function locationList() {
           tr += '<button type="button" class="btn btn-primary btn-sm deleteLocationBtn" data-id="' + id + '"><i class="fa-solid fa-trash fa-fw"></i></button>';
           tr += '</td>';
           tr += '</tr>';
-          deptoption += '<option value="' + id + '">' + locname + '</option>';
           tbody.append(tr);
-        $('#addDepartmentLocation').html(deptoption);
         }
       }
     }
@@ -298,8 +368,6 @@ $("#addPersonnelForm").on("submit", function (e) {
           if (data.status.code === "200") {
               $('#addPersonnelModal').modal('hide');
               personnelList();
-              departmentList();
-              locationList();
               //showSuccessAlert(response.description);
           } else {
               $('#addPersonnelModal').modal('hide');
@@ -394,8 +462,6 @@ $("#editPersonnelForm").on("submit", function (e) {
           if (data.status.code === "200") {
               $('#editPersonnelModal').modal('hide');
               personnelList();
-              departmentList();
-              locationList();
               //showSuccessAlert(response.description);
           } else {
               $('#editPersonnelModal').modal('hide');
@@ -465,8 +531,6 @@ $("#deletePersonnelForm").on("submit", function (e) {
           if (data.status.code === "200") {
             $('#areYouSurePersonnelModal').modal('hide');
               personnelList();
-              departmentList();
-              locationList();
               //showSuccessAlert(response.description);
           } else {
             $('#areYouSurePersonnelModal').modal('hide');
@@ -503,9 +567,7 @@ $("#addDepartmentForm").on("submit", function (e) {
           var response = data.status;
           if (data.status.code === "200") {
               $('#addDepartmentModal').modal('hide');
-              personnelList();
               departmentList();
-              locationList();
               //showSuccessAlert(response.description);
           } else {
               $('#addDepartmentModal').modal('hide');
@@ -585,9 +647,7 @@ $("#editDepartmentForm").on("submit", function (e) {
           var response = data.status;
           if (data.status.code === "200") {
               $('#editDepartmentModal').modal('hide');
-              personnelList();
               departmentList();
-              locationList();
               //showSuccessAlert(response.description);
           } else {
               $('#editDepartmentModal').modal('hide');
@@ -655,9 +715,7 @@ $("#deleteDepartmentForm").on("submit", function (e) {
       success: function(data) {
           if (data.status.code === "200") {
             $('#areYouSureDeleteDepartmentModal').modal('hide');
-              personnelList();
               departmentList();
-              locationList();
               //showSuccessAlert(response.description);
           } else {
             $('#areYouSureDeleteDepartmentModal').modal('hide');
@@ -691,8 +749,6 @@ $("#addLocationForm").on("submit", function (e) {
       success: function(data) {
           if (data.status.code === "200") {
               $('#addLocationModal').modal('hide');
-              personnelList();
-              departmentList();
               locationList();
               //showSuccessAlert(response.description);
           } else {
@@ -762,8 +818,6 @@ $("#editLocationForm").on("submit", function (e) {
       success: function(data) {
           if (data.status.code === "200") {
               $('#editLocationModal').modal('hide');
-              personnelList();
-              departmentList();
               locationList();
               //showSuccessAlert(response.description);
           } else {
@@ -831,8 +885,6 @@ $("#deleteLocationForm").on("submit", function (e) {
       success: function(data) {
           if (data.status.code === "200") {
             $('#areYouSureDeleteLocationModal').modal('hide');
-              personnelList();
-              departmentList();
               locationList();
               //showSuccessAlert(response.description);
           } else {
